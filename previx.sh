@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# D7v2 v1.0
+# previx
 #
 # Weather Informations
 #
@@ -14,7 +14,8 @@
 # remotomasi: https://github.com/remotomasi
 #
 # Creative Commons (cc) BY-NC 2016 Remo Tomasi • remo.tomasi@gmail.com
-###############################################################################
+#
+
 wget "http://api.worldweatheronline.com/free/v2/weather.ashx?q=City&format=xml&num_of_days=5&key=*****************************" 2>/dev/null -O -|  tr '/' '\n\r' > tempo3.xml
 cat tempo3.xml | head -n 704 | tail -n 339 > tempo4.xml
 rm tempo3.xml; cat tempo4.xml > tempo3.xml; rm tempo4.xml
