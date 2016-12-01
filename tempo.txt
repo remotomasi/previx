@@ -1,0 +1,82 @@
+ weatherdata
+ location
+ name
+Lecce  name
+ type
+  type
+ country
+IT  country
+ timezone
+  timezone
+ location altitude= 0  latitude= 40.357029  longitude= 18.17202  geobase= geonames  geobaseid= 6542124 
+  location
+  location
+ credit
+  credit
+ meta
+ lastupdate
+  lastupdate
+ calctime
+0.0323  calctime
+ nextupdate
+  nextupdate
+  meta
+ sun rise= 2016-12-01T05:51:39  set= 2016-12-01T15:21:27 
+  sun
+ forecast
+ time day= 2016-12-01 
+ symbol number= 800  name= cielo sereno  var= 02d 
+  symbol
+ precipitation
+  precipitation
+ windDirection deg= 317  code= NW  name= Northwest 
+  windDirection
+ windSpeed mps= 5.32  name= Gentle Breeze 
+  windSpeed
+ temperature day= 10.9  min= 9.83  max= 12.99  night= 9.83  eve= 12.22  morn= 10.9 
+  temperature
+ pressure unit= hPa  value= 1033.21 
+  pressure
+ humidity value= 100  unit= % 
+  humidity
+ clouds value= clear sky  all= 8  unit= % 
+  clouds
+  time
+ time day= 2016-12-02 
+ symbol number= 800  name= cielo sereno  var= 01d 
+  symbol
+ precipitation
+  precipitation
+ windDirection deg= 10  code= N  name= North 
+  windDirection
+ windSpeed mps= 1.62  name= Light breeze 
+  windSpeed
+ temperature day= 12.3  min= 6.35  max= 14.36  night= 8.96  eve= 13.27  morn= 7.18 
+  temperature
+ pressure unit= hPa  value= 1026.02 
+  pressure
+ humidity value= 100  unit= % 
+  humidity
+ clouds value= clear sky  all= 0  unit= % 
+  clouds
+  time
+ time day= 2016-12-03 
+ symbol number= 500  name= pioggia leggera  var= 10d 
+  symbol
+ precipitation value= 0.63  type= rain 
+  precipitation
+ windDirection deg= 132  code= SE  name= SouthEast 
+  windDirection
+ windSpeed mps= 2.16  name= Light breeze 
+  windSpeed
+ temperature day= 11.9  min= 7.77  max= 15.12  night= 10.33  eve= 15.12  morn= 7.77 
+  temperature
+ pressure unit= hPa  value= 1028.89 
+  pressure
+ humidity value= 100  unit= % 
+  humidity
+ clouds value= overcast clouds  all= 100  unit= % 
+  clouds
+  time
+  forecast
+  weatherdata

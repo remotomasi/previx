@@ -9,20 +9,25 @@
 #
 # Where you see "key" or "appid" in the script you have to substitute them
 # with your personal keys obtained during sign up to these sites.
-# The same thing you can do when you meet "q=" --> name of your city
+# The same thing you can do when you meet "q=" --> name of your city ($city)
 #
 # remotomasi: https://github.com/remotomasi
 #
 # Creative Commons (cc) BY-NC 2016 Remo Tomasi • remo.tomasi@gmail.com
 #
 
-wget "http://api.worldweatheronline.com/free/v2/weather.ashx?q=City&format=xml&num_of_days=5&key=*****************************" 2>/dev/null -O -|  tr '/' '\n\r' > tempo3.xml
+echo "Insert the name of your city: "
+read city
+rm tempo3.xml;
+if [ -f "tempo4.xml" ]; then rm tempo4.xml; fi
+rm tempo.txt
+wget "http://api.worldweatheronline.com/free/v2/weather.ashx?q=$city&format=xml&num_of_days=5&key=**********************" 2>/dev/null -O -|  tr '/' '\n\r' > tempo3.xml
 cat tempo3.xml | head -n 704 | tail -n 339 > tempo4.xml
 rm tempo3.xml; cat tempo4.xml > tempo3.xml; rm tempo4.xml
-wget "http://api.openweathermap.org/data/2.5/forecast/daily?q=City&mode=xml&units=metric&cnt=3&lang=it&appid=********************************" 2>/dev/null -O -| tr '>' '\n' | tr '/' ' ' | tr '"' ' ' | tr '<' ' ' > tempo.txt
+wget "http://api.openweathermap.org/data/2.5/forecast/daily?q=$city&mode=xml&units=metric&cnt=3&lang=it&appid=****************************" 2>/dev/null -O -| tr '>' '\n' | tr '/' ' ' | tr '"' ' ' | tr '<' ' ' > tempo.txt
 data=$(cat tempo3.xml | grep "<weather><date>" | cut -d'<' -f3 | cut -d'>' -f2)
 echo "--------------------------------------------"
-echo "Meteo Casarano    :" $(echo $data | cut -d' ' -f2)
+echo "Meteo " $city $(echo $data | cut -d' ' -f2)
 echo "--------------------------------------------"
 echo "                  : WWO| OWM "
 echo "--------------------------------------------"
