@@ -4,7 +4,7 @@
 #
 # Weather Informations
 #
-# Extract weather informations from the sites "worldweatheronline" and
+# Extract weather informations from the sites "www.apixu.com" and
 # "openweathermap" it makes an average and show them on screen.
 #
 # Where you see "key" or "appid" in the script you have to substitute them
@@ -23,71 +23,44 @@
 # 2016 Remo Tomasi • remo.tomasi@gmail.com
 #
 
+clear
 echo "Insert the name of your city: "
 read city
-rm tempo3.xml;
-if [ -f "tempo4.xml" ]; then rm tempo4.xml; fi
-rm tempo.txt
-wget "http://api.worldweatheronline.com/free/v2/weather.ashx?q=$city&format=xml&num_of_days=5&key=**********************" 2>/dev/null -O -|  tr '/' '\n\r' > tempo3.xml
-cat tempo3.xml | head -n 704 | tail -n 339 > tempo4.xml
-rm tempo3.xml; cat tempo4.xml > tempo3.xml; rm tempo4.xml
-wget "http://api.openweathermap.org/data/2.5/forecast/daily?q=$city&mode=xml&units=metric&cnt=3&lang=it&appid=****************************" 2>/dev/null -O -| tr '>' '\n' | tr '/' ' ' | tr '"' ' ' | tr '<' ' ' > tempo.txt
-data=$(cat tempo3.xml | grep "<weather><date>" | cut -d'<' -f3 | cut -d'>' -f2)
+if [ -e "tempo1.xml" ]; then rm tempo1.xml; fi
+if [ -e "tempo2.xml" ]; then rm tempo2.xml; fi
+wget "https://api.apixu.com/v1/current.json?key=*******************&q=$city" 2>/dev/null -O tempo1.json
+wget "http://api.openweathermap.org/data/2.5/weather?q=$city,it&appid=*******************" 2>/dev/null -O tempo2.json
+data=$(date -u)
 echo "--------------------------------------------"
-echo "Meteo " $city $(echo $data | cut -d' ' -f2)
+echo "Meteo>>" $city $(echo $data)
 echo "--------------------------------------------"
-echo "                  : WWO| OWM "
+echo "                  : APX | OWM "
 echo "--------------------------------------------"
-Tmax=$(cat tempo3.xml | grep "maxtempC" | head -n 1 | tail -n 1 | cut -d'>' -f3 | cut -d'<' -f1)
-Tmax2=$(cat tempo.txt | grep temperature | head -n 1 | tail -n 1 | cut -d'=' -f4 | cut -d' ' -f2)
-TmaxMed=$(bc -l <<< "($Tmax + $Tmax2) / 2")
-Tma=$(echo $Tmax "   | " $Tmax2 "   | " $TmaxMed )
-echo "Tmax              :" ${Tma:0:${#Tma}-18}
-Tmin=$(cat tempo3.xml | grep "mintempC" | head -n 1 | tail -n 1 | cut -d'>' -f3 | cut -d'<' -f1)
-Tmin2=$(cat tempo.txt | grep temperature | head -n 1 | tail -n 1 | cut -d'=' -f3 | cut -d' ' -f2)
-TminMed=$(bc -l <<< "($Tmin + $Tmin2) / 2")
-Tmi=$(echo $Tmin "   | " $Tmin2 "   | " $TminMed)
-echo "Tmin              :" ${Tmi:0:${#Tmi}-18}
-pressure1=$(cat tempo3.xml | grep "pressure" | head -n 1 | tail -n 1 | cut -d'>' -f3 | cut -d'<' -f1)
-pressure13=$(cat tempo3.xml | grep "pressure" | head -n 9 | tail -n 1 | cut -d'>' -f3 | cut -d'<' -f1)
-pressure22=$(cat tempo3.xml | grep "pressure" | head -n 15 | tail -n 1 | cut -d'>' -f3 | cut -d'<' -f1)
-pressureM=$(bc -l <<< "($pressure1 + $pressure13 + $pressure22) / 3"); pressureM=$(echo $pressureM | cut -d'.' -f1)
-pressure=$(cat tempo.txt | grep pressure |  head -n 1 | tail -n 1 | cut -d'=' -f3 | cut -d'u' -f1)
-pressureMed=$(bc -l <<< "($pressureM + $pressure) / 2")
-pres=$(echo $pressureM " | " $pressure " | " $pressureMed)
-echo "Pressure          :" ${pres:0:${#pres}-18}
-humidity1=$(cat tempo3.xml | grep "humidity" | head -n 1 | tail -n 1 | cut -d'>' -f3 | cut -d'<' -f1)
-humidity13=$(cat tempo3.xml | grep "humidity" | head -n 9 | tail -n 1 | cut -d'>' -f3 | cut -d'<' -f1)
-humidity22=$(cat tempo3.xml | grep "humidity" | head -n 15 | tail -n 1 | cut -d'>' -f3 | cut -d'<' -f1)
-humidityM=$(bc -l <<< "($humidity1 + $humidity13 + $humidity13) / 3"); humidityM=$(echo $humidityM | cut -d'.' -f1)
-humidity=$(cat tempo.txt | grep humidity | head -n 1 | tail -n 1 | cut -d'=' -f2 | cut -d'u' -f1)
-humidityMed=$(bc -l <<< "($humidityM + $humidity) / 2")
-hum=$(echo $humidityM "   | " $humidity "      | " $humidityMed)
-echo "Umidita'          :" ${hum:0:${#hum}-18}
-windspeed1=$(cat tempo3.xml | grep "windspeedKmph" | head -n 1 | tail -n 1 | cut -d'>' -f3 | cut -d'<' -f1)
-windspeed13=$(cat tempo3.xml | grep "windspeedKmph" | head -n 9 | tail -n 1 | cut -d'>' -f3 | cut -d'<' -f1)
-windspeed22=$(cat tempo3.xml | grep "windspeedKmph" | head -n 15 | tail -n 1 | cut -d'>' -f3 | cut -d'<' -f1)
-windspeedM=$(bc -l <<< "($windspeed1 + $windspeed13 + $windspeed22) / 3"); windspeedM=$(echo $windspeedM | cut -d'.' -f1)
-windspeed=$(cat tempo.txt | grep windSpeed | head -n 2 | tail -n 1 | cut -d'=' -f2 | cut -d'n' -f1)
-windspeed=$(bc -l <<< "$windspeed * 3.6")
-windspeedMed=$(bc -l <<< "($windspeedM + $windspeed) / 2")
-windsp=$(echo $windspeedM " | " $windspeed " | " $windspeedMed)
-echo "Vento (Velocita') :" ${windsp:0:${#windsp}-18}
-winddir1=$(cat tempo3.xml | grep "winddir16Point" | head -n 1 | tail -n 1 | cut -d'>' -f3 | cut -d'<' -f1)
-winddir13=$(cat tempo3.xml | grep "winddir16Point" | head -n 9 | tail -n 1 | cut -d'>' -f3 | cut -d'<' -f1)
-winddir22=$(cat tempo3.xml | grep "winddir16Point" | head -n 15 | tail -n 1 | cut -d'>' -f3 | cut -d'<' -f1)
-windir=$(cat tempo.txt | grep windDirection | head -n 1 | tail -n 1 | cut -d'=' -f3 | cut -d'n' -f1)
-echo "Vento (Direzione) :" $winddir1 "|" $windir
-cielo1=$(cat tempo3.xml | grep "CDATA" | head -n 2 | tail -n 1 | cut -d'[' -f3 | cut -d']' -f1)
-cielo13=$(cat tempo3.xml | grep "CDATA" | head -n 10 | tail -n 1 | cut -d'[' -f3 | cut -d']' -f1)
-cielo22=$(cat tempo3.xml | grep "CDATA" | head -n 16 | tail -n 1 | cut -d'[' -f3 | cut -d']' -f1)
-b=$(cat tempo.txt | grep symbol | head -n 1 | tail -n 1 | cut -d'=' -f3)
-echo "Cielo             :"  $cielo1 "-" $cielo13 "-" $cielo22 " | " ${b:0:${#b}-3}
-copertura1=$(cat tempo3.xml | grep "cloudcover" | head -n 1 | tail -n 1 | cut -d'>' -f3 | cut -d'<' -f1)
-copertura13=$(cat tempo3.xml | grep "cloudcover" | head -n 9 | tail -n 1 | cut -d'>' -f3 | cut -d'<' -f1)
-copertura22=$(cat tempo3.xml | grep "cloudcover" | head -n 15 | tail -n 1 | cut -d'>' -f3 | cut -d'<' -f1)
-copertura=$(cat tempo.txt | grep clouds | head -n 1 | tail -n 1 | cut -d'=' -f3 | cut -d' ' -f2)
-coperturaM=$(bc -l <<< "($copertura1 + $copertura13 + $copertura22) / 3"); coperturaM=$(echo $coperturaM | cut -d'.' -f1)
-coperturaMed=$(bc -l <<< "($coperturaM + $copertura) / 2")
-cop=$(echo $coperturaM " | " $copertura " | " $coperturaMed)
-echo "Copertura         :" ${cop:0:${#cop}-18}
+T1=$(cat tempo1.json* | jq -r '.current.temp_c')
+T2=$(cat tempo2.json | jq -r '.main.temp')
+T2=$(bc -l <<< "$T2 -273.15")
+Tma=$(echo $T1 "   |   " $T2  )
+echo "Tmax              :" $Tma
+pressure1=$(cat tempo1.json* | jq -r '.current.pressure_mb')
+pressure2=$(cat tempo2.json | jq -r '.main.pressure')
+pres=$(echo $pressure1 " | " $pressure2 )
+echo "Pressure          :" $pres
+humidity1=$(cat tempo1.json* | jq -r '.current.humidity')
+humidity2=$(cat tempo2.json | jq -r '.main.humidity')
+hum=$(echo $humidity1 "   | " $humidity2 )
+echo "Umidita'          :" $hum
+windspeed1=$(cat tempo1.json* | jq -r '.current.wind_kph')
+windspeed2=$(cat tempo2.json | jq -r '.wind.speed')
+windspeed=$(bc -l <<< "$windspeed2 * 3.6")
+windsp=$(echo $windspeed1 " | " $windspeed )
+echo "Vento (Velocita') :" $windsp
+winddir1=$(cat tempo1.json* | jq -r '.current.wind_dir')
+winddir2=$(cat tempo2.json | jq -r '.wind.deg')
+echo "Vento (Direzione) :" $winddir1 "|" $winddir2 "°"
+cielo1=$(cat tempo1.json* | jq -r '.current.condition.text')
+cielo2=$(cat tempo2.json | jq -r '.weather[0].description')
+echo "Cielo             :"  $cielo1 " | " $cielo2
+copertura1=$(cat tempo1.json* | jq -r '.current.cloud')
+copertura2=$(cat tempo2.json | jq -r '.clouds.all')
+cop=$(echo $copertura1 " | " $copertura2)
+echo "Copertura         :" $cop
