@@ -46,27 +46,22 @@ echo "----------------------------------------------"
 T1=$(cat tempo1.json* | jq -r '.current.temp_c')
 T2=$(cat tempo2.json | jq -r '.main.temp')
 T2=$(bc -l <<< "$T2 -273.15")
-Tma=$(echo $T1 "   |   " $T2  )
 echo -e "Temperature (°C) :" $T1 "\t|\t" $T2
 pressure1=$(cat tempo1.json* | jq -r '.current.pressure_mb')
 pressure2=$(cat tempo2.json | jq -r '.main.pressure')
-pres=$(echo $pressure1 " | " $pressure2 )
 echo -e "Pressure (hPa)   :" $pressure1 "\t|\t" $pressure2
 humidity1=$(cat tempo1.json* | jq -r '.current.humidity')
 humidity2=$(cat tempo2.json | jq -r '.main.humidity')
-hum=$(echo $humidity1 "   | " $humidity2 )
 echo -e "Umidity (%)      :" $humidity1 "\t\t|\t" $humidity2
 windspeed1=$(cat tempo1.json* | jq -r '.current.wind_kph')
 windspeed2=$(cat tempo2.json | jq -r '.wind.speed')
 windspeed=$(bc -l <<< "$windspeed2 * 3.6")
-windsp=$(echo $windspeed1 " | " $windspeed )
 echo -e "Wind speed (Km/h):" $windspeed1 "\t|\t" $windspeed
 winddir1=$(cat tempo1.json* | jq -r '.current.wind_dir')
 winddir2=$(cat tempo2.json | jq -r '.wind.deg')
 echo -e "Wind (Direction) :" $winddir1 "\t\t|\t" $winddir2 "°"
 copertura1=$(cat tempo1.json* | jq -r '.current.cloud')
 copertura2=$(cat tempo2.json | jq -r '.clouds.all')
-cop=$(echo $copertura1 "\t|\t" $copertura2)
 echo -e "Covered sky (%)  :" $copertura1 "\t\t|\t" $copertura2
 cielo1=$(cat tempo1.json* | jq -r '.current.condition.text')
 cielo2=$(cat tempo2.json | jq -r '.weather[0].description')
