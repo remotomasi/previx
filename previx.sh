@@ -9,6 +9,11 @@
 #
 # Where you see "key" or "appid" in the script you have to substitute them
 # with your personal keys obtained during sign up to these sites.
+# The way in which we can get passwords is to create a file that contain them
+# structured in this way:
+# key1 apixu
+# key2 openweathermap
+# the file must have the following name keys.txt
 # The same thing you can do when you meet "q=" --> name of your city ($city)
 #
 # remotomasi: https://github.com/remotomasi
@@ -28,39 +33,41 @@ echo "Insert the name of your city: "
 read city
 if [ -e "tempo1.xml" ]; then rm tempo1.xml; fi
 if [ -e "tempo2.xml" ]; then rm tempo2.xml; fi
-wget "https://api.apixu.com/v1/current.json?key=*******************&q=$city" 2>/dev/null -O tempo1.json
-wget "http://api.openweathermap.org/data/2.5/weather?q=$city,it&appid=*******************" 2>/dev/null -O tempo2.json
+key1=$(cat keys.txt | cut -d' ' -f1 | head -1)
+key2=$(cat keys.txt | cut -d' ' -f1 | tail -1)
+wget "https://api.apixu.com/v1/current.json?key=$key1&q=$city" 2>/dev/null -O tempo1.json
+wget "http://api.openweathermap.org/data/2.5/weather?q=$city,it&appid=$key2" 2>/dev/null -O tempo2.json
 data=$(date -u)
-echo "--------------------------------------------"
+echo "----------------------------------------------"
 echo "Meteo>>" $city $(echo $data)
-echo "--------------------------------------------"
-echo "                  : APX | OWM "
-echo "--------------------------------------------"
+echo "----------------------------------------------"
+echo -e "                 : APX \t\t|\t OWM "
+echo "----------------------------------------------"
 T1=$(cat tempo1.json* | jq -r '.current.temp_c')
 T2=$(cat tempo2.json | jq -r '.main.temp')
 T2=$(bc -l <<< "$T2 -273.15")
 Tma=$(echo $T1 "   |   " $T2  )
-echo "Tmax              :" $Tma
+echo -e "Temperature (°C) :" $T1 "\t|\t" $T2
 pressure1=$(cat tempo1.json* | jq -r '.current.pressure_mb')
 pressure2=$(cat tempo2.json | jq -r '.main.pressure')
 pres=$(echo $pressure1 " | " $pressure2 )
-echo "Pressure          :" $pres
+echo -e "Pressure (hPa)   :" $pressure1 "\t|\t" $pressure2
 humidity1=$(cat tempo1.json* | jq -r '.current.humidity')
 humidity2=$(cat tempo2.json | jq -r '.main.humidity')
 hum=$(echo $humidity1 "   | " $humidity2 )
-echo "Umidita'          :" $hum
+echo -e "Umidity (%)      :" $humidity1 "\t\t|\t" $humidity2
 windspeed1=$(cat tempo1.json* | jq -r '.current.wind_kph')
 windspeed2=$(cat tempo2.json | jq -r '.wind.speed')
 windspeed=$(bc -l <<< "$windspeed2 * 3.6")
 windsp=$(echo $windspeed1 " | " $windspeed )
-echo "Vento (Velocita') :" $windsp
+echo -e "Wind speed (Km/h):" $windspeed1 "\t|\t" $windspeed
 winddir1=$(cat tempo1.json* | jq -r '.current.wind_dir')
 winddir2=$(cat tempo2.json | jq -r '.wind.deg')
-echo "Vento (Direzione) :" $winddir1 "|" $winddir2 "°"
-cielo1=$(cat tempo1.json* | jq -r '.current.condition.text')
-cielo2=$(cat tempo2.json | jq -r '.weather[0].description')
-echo "Cielo             :"  $cielo1 " | " $cielo2
+echo -e "Wind (Direction) :" $winddir1 "\t\t|\t" $winddir2 "°"
 copertura1=$(cat tempo1.json* | jq -r '.current.cloud')
 copertura2=$(cat tempo2.json | jq -r '.clouds.all')
-cop=$(echo $copertura1 " | " $copertura2)
-echo "Copertura         :" $cop
+cop=$(echo $copertura1 "\t|\t" $copertura2)
+echo -e "Covered sky (%)  :" $copertura1 "\t\t|\t" $copertura2
+cielo1=$(cat tempo1.json* | jq -r '.current.condition.text')
+cielo2=$(cat tempo2.json | jq -r '.weather[0].description')
+echo -e "Weather          :"  $cielo1 "/" $cielo2
