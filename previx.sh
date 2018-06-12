@@ -46,7 +46,7 @@ echo "----------------------------------------------"
 T1=$(cat tempo1.json* | jq -r '.current.temp_c')
 T2=$(cat tempo2.json | jq -r '.main.temp')
 T2=$(bc -l <<< "$T2 -273.15")
-echo -e "Temperature (°C) :" $T1 "\t|\t" $T2
+echo -e "Temperature (°C) :" $T1 "\t\t|\t" $T2
 pressure1=$(cat tempo1.json* | jq -r '.current.pressure_mb')
 pressure2=$(cat tempo2.json | jq -r '.main.pressure')
 echo -e "Pressure (hPa)   :" $pressure1 "\t|\t" $pressure2
